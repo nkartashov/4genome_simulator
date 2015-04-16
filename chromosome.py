@@ -5,6 +5,7 @@ import random
 class Chromosome(object):
     def __init__(self, size):
         self._blocks = range(1, size + 1)
+        self._ending = '$'
 
     @staticmethod
     def _invert(blocks):
@@ -32,4 +33,4 @@ class Chromosome(object):
         return self._blocks.__str__()
 
     def as_grimm(self):
-        return ' '.join(map(str, self._blocks)) + ' $'
+        return ' '.join(map(str, self._blocks)) + ' {0}'.format(self._ending)

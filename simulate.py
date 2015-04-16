@@ -18,7 +18,9 @@ def build_parser():
     parser.add_argument('-e2', '--branch_distance', help='Branch distance', required=True, type=int)
     return parser
 
+
 BLOCK_FILENAME = 'blocks.txt'
+
 
 def main():
     parser = build_parser()
@@ -30,7 +32,7 @@ def main():
     chromosome_number = args.chromosome_number
     simulations_number = args.simulations_number
     chromosome_constructor = Chromosome if args.linear else CircularChromosome
-    if not path.isdir(out_path):
+    if path.exists(out_path) and not path.isdir(out_path):
         print('{0} is not a folder path'.format(out_path))
         exit(1)
     if not path.exists(out_path):
@@ -45,7 +47,6 @@ def main():
             for name, genome in random_genomes.iteritems():
                 out_file.write('>{0}\n'.format(name))
                 out_file.write('{0}\n'.format(genome.as_grimm()))
-
 
 
 if __name__ == '__main__':

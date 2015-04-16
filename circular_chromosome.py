@@ -8,6 +8,7 @@ from chromosome import Chromosome
 class CircularChromosome(Chromosome):
     def __init__(self, size):
         super(CircularChromosome, self).__init__(size)
+        self._ending = '@'
 
     def make_inversion(self, left, right):
         if left < right:
