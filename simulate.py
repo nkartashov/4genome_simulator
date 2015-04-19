@@ -22,6 +22,24 @@ def build_parser():
 BLOCK_FILENAME = 'blocks.txt'
 
 
+def simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, simulations_number, out_path):
+    if path.exists(out_path) and not path.isdir(out_path):
+        print('{0} is not a folder path'.format(out_path))
+        exit(1)
+    if not path.exists(out_path):
+        makedirs(out_path)
+    for i in xrange(simulations_number):
+        random_genomes = \
+            make_random_4genome_process(e1, e2, block_number, chromosome_number, chromosome_constructor)
+        simulation_out_path = path.join(out_path, str(i))
+        if not path.exists(simulation_out_path):
+            mkdir(simulation_out_path)
+        with open(path.join(simulation_out_path, BLOCK_FILENAME), 'w') as out_file:
+            for name, genome in random_genomes.iteritems():
+                out_file.write('>{0}\n'.format(name))
+                out_file.write('{0}\n'.format(genome.as_grimm()))
+
+
 def main():
     parser = build_parser()
     args = parser.parse_args()
@@ -32,21 +50,7 @@ def main():
     chromosome_number = args.chromosome_number
     simulations_number = args.simulations_number
     chromosome_constructor = Chromosome if args.linear else CircularChromosome
-    if path.exists(out_path) and not path.isdir(out_path):
-        print('{0} is not a folder path'.format(out_path))
-        exit(1)
-    if not path.exists(out_path):
-        makedirs(out_path)
-    random_genomes = \
-        make_random_4genome_process(e1, e2, block_number, chromosome_number, chromosome_constructor)
-    for i in xrange(simulations_number):
-        simulation_out_path = path.join(out_path, str(i))
-        if not path.exists(simulation_out_path):
-            mkdir(simulation_out_path)
-        with open(path.join(simulation_out_path, BLOCK_FILENAME), 'w') as out_file:
-            for name, genome in random_genomes.iteritems():
-                out_file.write('>{0}\n'.format(name))
-                out_file.write('{0}\n'.format(genome.as_grimm()))
+    simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, simulations_number, out_path)
 
 
 if __name__ == '__main__':

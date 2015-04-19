@@ -2,6 +2,7 @@ __author__ = 'nikita_kartashov'
 
 import random
 
+
 class Chromosome(object):
     def __init__(self, size):
         self._blocks = range(1, size + 1)
@@ -12,9 +13,9 @@ class Chromosome(object):
         return [-block for block in reversed(blocks)]
 
     def _inverted_blocks(self, left, right):
-        assert(left >= 0)
-        assert(right <= len(self._blocks))
-        assert(left < right)
+        assert (left >= 0)
+        assert (right <= len(self._blocks))
+        assert (left < right)
         return self._invert(self._blocks[left: right])
 
     def make_random_inversion(self):

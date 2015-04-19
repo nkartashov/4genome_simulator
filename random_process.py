@@ -1,13 +1,11 @@
 __author__ = 'nikita_kartashov'
 
-import random
+from copy import deepcopy
 
 from genome import Genome
-from copy import deepcopy
 
 
 def make_random_4genome_process(e1, e2, block_number, chromosome_number, chromosome_constructor):
-    random.seed()
     center_genome = Genome(block_number, chromosome_number, chromosome_constructor)
     distance_to_left = e1 / 2
     distance_to_right = e1 - distance_to_left
