@@ -23,10 +23,6 @@ class Chromosome(object):
         right = random.randint(left + 1, len(self._blocks))
         self.make_inversion(left, right)
 
-    def make_random_inversions(self, number):
-        for _ in xrange(number):
-            self.make_random_inversion()
-
     def make_inversion(self, left, right):
         self._blocks[left: right] = self._inverted_blocks(left, right)
 

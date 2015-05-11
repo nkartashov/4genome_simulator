@@ -12,6 +12,7 @@ SIMULATIONS_PER_SETUP = 1000
 BLOCKS_PER_GENOME = 200
 CHROMOSOME_NUMBER = 1
 
+
 # Outputs the range which looks like 5, 10, 20, ..., x
 def five_to_x(x):
     return [5] + range(10, x + 10, 10)
