@@ -11,6 +11,8 @@ class CircularChromosome(Chromosome):
         self._ending = '@'
 
     def make_inversion(self, left, right):
+        if left == right:
+            right += 1
         if left < right:
             super(CircularChromosome, self).make_inversion(left, right)
         else:
@@ -22,24 +24,6 @@ class CircularChromosome(Chromosome):
             self._blocks[:right] = inverted_blocks[left_size:]
 
     def make_random_inversion(self):
-        left = 0
-        right = 0
-        while left != right:
-            left = random.randint(0, len(self._blocks) - 1)
-            right = random.randint(1, len(self._blocks))
+        left = random.randint(0, len(self._blocks) - 1)
+        right = random.randint(0, len(self._blocks) - 1)
         self.make_inversion(left, right)
-
-        # if bool(random.getrandbits(1)):
-        #     left < right
-            # super(CircularChromosome, self).make_random_inversion()
-        # else:
-        #     left > right
-            # left = random.randint(1, len(self._blocks) - 1)
-            # right = random.randint(0, left - 1)
-            # self.make_inversion(left, right)
-
-
-# if __name__ == '__main__':
-#     c = CircularChromosome(200)
-#     for _ in xrange(2000):
-#         c.make_random_inversion()
