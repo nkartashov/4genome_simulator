@@ -1,12 +1,30 @@
 __author__ = 'nikita_kartashov'
 
 import random
+from copy import copy
 
 
 class Chromosome(object):
     def __init__(self, size):
         self._blocks = range(1, size + 1)
         self._ending = '$'
+        self._possible_splits = Chromosome._possible_splits
+
+    def clone(self):
+        c = Chromosome(len(self._blocks))
+        c._blocks = copy(self._blocks)
+        return c
+
+    def __eq__(self, other):
+        return self._blocks == other._blocks
+
+    @staticmethod
+    def generate_possible_splits(size):
+        possible_splits = []
+        for left in xrange(0, size):
+            for right in xrange(left + 1, size + 1):
+                possible_splits.append((left, right))
+        return possible_splits
 
     @staticmethod
     def _invert(blocks):
@@ -19,8 +37,7 @@ class Chromosome(object):
         return self._invert(self._blocks[left: right])
 
     def make_random_inversion(self):
-        left = random.randint(0, len(self._blocks) - 1)
-        right = random.randint(left + 1, len(self._blocks))
+        left, right = random.choice(self._possible_splits)
         self.make_inversion(left, right)
 
     def make_inversion(self, left, right):

@@ -4,7 +4,7 @@ import argparse
 from os import makedirs, path, mkdir
 
 from random_process import make_random_4genome_process
-from circular_chromosome import Chromosome, CircularChromosome
+from circular_chromosome import Chromosome, CircularChromosome, prepare_chromosomes
 
 
 def build_parser():
@@ -20,6 +20,7 @@ def build_parser():
 
 
 BLOCK_FILENAME = 'blocks.txt'
+CORRECT_TREE_FILENAME = 'correct_tree.newick'
 
 
 def simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, simulations_number, out_path):
@@ -29,15 +30,17 @@ def simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, si
     if not path.exists(out_path):
         makedirs(out_path)
     for i in xrange(simulations_number):
-        random_genomes = \
+        random_genomes, topology = \
             make_random_4genome_process(e1, e2, block_number, chromosome_number, chromosome_constructor)
         simulation_out_path = path.join(out_path, str(i))
         if not path.exists(simulation_out_path):
             mkdir(simulation_out_path)
-        with open(path.join(simulation_out_path, BLOCK_FILENAME), 'w') as out_file:
+        with open(path.join(simulation_out_path, CORRECT_TREE_FILENAME), 'w') as correct_tree_file:
+            correct_tree_file.write('{0};'.format(str(filter(lambda c: c != "'", topology))))
+        with open(path.join(simulation_out_path, BLOCK_FILENAME), 'w') as block_file:
             for name, genome in random_genomes.iteritems():
-                out_file.write('>{0}\n'.format(name))
-                out_file.write('{0}\n'.format(genome.as_grimm()))
+                block_file.write('>{0}\n'.format(name))
+                block_file.write('{0}\n'.format(genome.as_grimm()))
 
 
 def main():
@@ -50,6 +53,7 @@ def main():
     chromosome_number = args.chromosome_number
     simulations_number = args.simulations_number
     chromosome_constructor = Chromosome if args.linear else CircularChromosome
+    prepare_chromosomes(block_number)
     simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, simulations_number, out_path)
 
 

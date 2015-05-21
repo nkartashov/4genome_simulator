@@ -15,7 +15,10 @@ def unfold(f, x):
 
 
 class Genome(object):
-    def __init__(self, block_number, chromosome_number=1, chromosome_constructor=CircularChromosome):
+    def __init__(self, block_number=0, chromosome_number=1, chromosome_constructor=CircularChromosome):
+        self._chromosomes = None
+        if block_number == 0:
+            return
         assert (block_number >= chromosome_number)
         assert (chromosome_number > 0)
         blocks_per_chromosome = block_number / chromosome_number
@@ -27,11 +30,19 @@ class Genome(object):
 
         self._chromosomes = [chromosome_constructor(size) for size in unfold(break_helper, block_number)]
 
+    def __eq__(self, other):
+        return all(l == r for l, r in zip(self._chromosomes, other._chromosomes))
+
     def perform_random_inversions(self, inversions_number):
         for _ in xrange(inversions_number):
             random_chromosome = random.choice(self._chromosomes)
             random_chromosome.make_random_inversion()
         return self
+
+    def clone(self):
+        g = Genome()
+        g._chromosomes = list(c.clone() for c in self._chromosomes)
+        return g
 
     def as_grimm(self):
         return '\n'.join(c.as_grimm() for c in self._chromosomes)

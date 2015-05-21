@@ -5,7 +5,7 @@ from sys import argv
 from os import path, makedirs
 
 from simulate import simulate
-from circular_chromosome import CircularChromosome
+from circular_chromosome import CircularChromosome, prepare_chromosomes
 
 
 SIMULATIONS_PER_SETUP = 1000
@@ -25,13 +25,15 @@ PARAMETER_GROUPS = [
     # First group: both e1 & e2 are 5, 10 to 40
     (FIVE_TO_FORTY, FIVE_TO_FORTY),
     # Second group: e1 = 1 to 5, e2 = 5, 10 to 60
-    (range(1, 6), FIVE_TO_SIXTY)]
+    # (range(1, 6), FIVE_TO_SIXTY)
+]
 
 if __name__ == '__main__':
     if len(argv) == 1:
         print('No output path specified')
         exit(1)
     output_path = argv[1]
+    prepare_chromosomes(BLOCKS_PER_GENOME)
     random.seed()
     for i, group in enumerate(PARAMETER_GROUPS):
         e1s, e2s = group
@@ -39,7 +41,8 @@ if __name__ == '__main__':
             for e2 in e2s:
                 if not path.exists(output_path):
                     makedirs(output_path)
-                group_e1_e2_folder_path = path.join(output_path,
-                                                    '_'.join([str(i), str(e1), str(e2)]))
+                config = '_'.join([str(i), str(e1), str(e2)])
+                group_e1_e2_folder_path = path.join(output_path, config)
                 simulate(e1, e2, BLOCKS_PER_GENOME, CHROMOSOME_NUMBER, CircularChromosome, SIMULATIONS_PER_SETUP,
                          group_e1_e2_folder_path)
+                print('Finished {0}'.format(config))
