@@ -21,6 +21,7 @@ def build_parser():
 
 BLOCK_FILENAME = 'blocks.txt'
 CORRECT_TREE_FILENAME = 'correct_tree.newick'
+ANCESTORS_FILENAME = 'ancestors.txt'
 
 
 def simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, simulations_number, out_path):
@@ -30,17 +31,24 @@ def simulate(e1, e2, block_number, chromosome_number, chromosome_constructor, si
     if not path.exists(out_path):
         makedirs(out_path)
     for i in xrange(simulations_number):
-        random_genomes, topology = \
+        random_genomes, topology, ancestors = \
             make_random_4genome_process(e1, e2, block_number, chromosome_number, chromosome_constructor)
         simulation_out_path = path.join(out_path, str(i))
         if not path.exists(simulation_out_path):
             mkdir(simulation_out_path)
         with open(path.join(simulation_out_path, CORRECT_TREE_FILENAME), 'w') as correct_tree_file:
             correct_tree_file.write('{0};'.format(str(filter(lambda c: c != "'", topology))))
-        with open(path.join(simulation_out_path, BLOCK_FILENAME), 'w') as block_file:
-            for name, genome in random_genomes.iteritems():
-                block_file.write('>{0}\n'.format(name))
-                block_file.write('{0}\n'.format(genome.as_grimm()))
+        blocks_file_path = path.join(simulation_out_path, BLOCK_FILENAME)
+        output_dictionary_with_genomes(blocks_file_path, random_genomes)
+        ancestors_file_path = path.join(simulation_out_path, ANCESTORS_FILENAME)
+        output_dictionary_with_genomes(ancestors_file_path, ancestors)
+
+
+def output_dictionary_with_genomes(file_path, genomes):
+    with open(file_path, 'w') as block_file:
+        for name, genome in genomes.iteritems():
+            block_file.write('>{0}\n'.format(name))
+            block_file.write('{0}\n'.format(genome.as_grimm()))
 
 
 def main():
